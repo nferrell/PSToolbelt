@@ -29,12 +29,13 @@ phases:
               $engine = 'powershell'
           }
       }
-      "Installing module '$module'"
+      "Installing module - $module"
       Install-Module $module -Force -SkipPublisherCheck -AllowClobber -Repository PSGallery -Scope CurrentUser
-      "Import-Module time: {0}" -f (Measure-Command {
+      "`n`n"
+      "Import-Module time - {0}" -f (Measure-Command {
           & $engine -noprofile -C "Import-Module $module"
       }).ToString()
-      "Get-Command time: {0}" -f (Measure-Command {
+      "Get-Command time - {0}" -f (Measure-Command {
           & $engine -noprofile -C "Get-Command -Module $module | Out-Null"
       }).ToString()
     displayName: Test Speed on Windows
@@ -56,12 +57,13 @@ phases:
               $engine = 'powershell'
           }
       }
-      "Installing module '$module'"
+      "Installing module - $module"
       Install-Module $module -Force -SkipPublisherCheck -AllowClobber -Repository PSGallery -Scope CurrentUser
-      "Import-Module time: {0}" -f (Measure-Command {
+      "`n`n"
+      "Import-Module time - {0}" -f (Measure-Command {
           & $engine -noprofile -C "Import-Module $module"
       }).ToString()
-      "Get-Command time: {0}" -f (Measure-Command {
+      "Get-Command time - {0}" -f (Measure-Command {
           & $engine -noprofile -C "Get-Command -Module $module | Out-Null"
       }).ToString()
     displayName: Test Speed on Core
