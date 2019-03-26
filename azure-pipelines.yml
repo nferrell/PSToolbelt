@@ -29,7 +29,8 @@ phases:
               $engine = 'powershell'
           }
       }
-      Install-Module $module -Force -SkipPublisherCheck -AllowClobber -Repository PSGallery
+      "Installing module '$module'"
+      Install-Module $module -Force -SkipPublisherCheck -AllowClobber -Repository PSGallery -Scope CurrentUser
       "Import-Module time: {0}" -f (Measure-Command {
           & $engine -noprofile -C "Import-Module $module"
       }).ToString()
@@ -55,7 +56,8 @@ phases:
               $engine = 'powershell'
           }
       }
-      Install-Module $module -Force -SkipPublisherCheck -AllowClobber -Repository PSGallery
+      "Installing module '$module'"
+      Install-Module $module -Force -SkipPublisherCheck -AllowClobber -Repository PSGallery -Scope CurrentUser
       "Import-Module time: {0}" -f (Measure-Command {
           & $engine -noprofile -C "Import-Module $module"
       }).ToString()
