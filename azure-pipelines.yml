@@ -1,0 +1,65 @@
+resources:
+- repo: self
+  clean: true
+
+trigger:
+  branches:
+    include:
+    - master
+    - "*"
+    exclude:
+    - refs/tag/*
+
+phases:
+- phase: Phase_1
+  displayName: Test on PS 5.1
+  condition: succeeded()
+  queue:
+    name: Hosted VS2017
+
+  steps:
+  - powershell: |
+      switch ($PSVersionTable.PSVersion.Major) {
+          6 {
+              $module = 'AWSPowerShell.NetCore'
+              $engine = 'pwsh'
+          }
+          default {
+              $module = 'AWSPowerShell'
+              $engine = 'powershell'
+          }
+      }
+      Install-Module $module -Force -SkipPublisherCheck -AllowClobber -Repository PSGallery
+      "Import-Module time: {0}" -f (Measure-Command {
+          & $engine -noprofile -C "Import-Module $module"
+      }).ToString()
+      "Get-Command time: {0}" -f (Measure-Command {
+          & $engine -noprofile -C "Get-Command -Module $module | Out-Null"
+      }).ToString()
+    displayName: Test Speed on Windows
+
+- phase: Phase_2
+  displayName: Test on Core
+  condition: succeeded()
+  queue:
+    name: Hosted Ubuntu 1604
+  steps:
+  - powershell: |
+      switch ($PSVersionTable.PSVersion.Major) {
+          6 {
+              $module = 'AWSPowerShell.NetCore'
+              $engine = 'pwsh'
+          }
+          default {
+              $module = 'AWSPowerShell'
+              $engine = 'powershell'
+          }
+      }
+      Install-Module $module -Force -SkipPublisherCheck -AllowClobber -Repository PSGallery
+      "Import-Module time: {0}" -f (Measure-Command {
+          & $engine -noprofile -C "Import-Module $module"
+      }).ToString()
+      "Get-Command time: {0}" -f (Measure-Command {
+          & $engine -noprofile -C "Get-Command -Module $module | Out-Null"
+      }).ToString()
+    displayName: Test Speed on Core
